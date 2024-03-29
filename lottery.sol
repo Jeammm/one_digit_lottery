@@ -56,7 +56,7 @@ contract Lottery is CommitReveal{
         require(numPlayer <= poolSize);
         require(numberIsTaken[choice] == false);
         require(msg.value == 1 ether);
-        // require(poolStartTime + T1 <= block.timestamp);
+        require(block.timestamp - poolStartTime < T1);
 
         numberIsTaken[choice] = true;
         takenNumber[choice] = msg.sender;
@@ -70,7 +70,7 @@ contract Lottery is CommitReveal{
     function revealMyChoice(uint choice, string memory salt) public {
         //reveal the answer with the given salt
         require(msg.sender == owner);
-        // require(block.timestamp - poolStartTime > T1);
+        require(block.timestamp - poolStartTime > T1);
 
         bytes32 saltHash = keccak256(abi.encodePacked(salt));
         revealAnswer(bytes32(choice), saltHash);
@@ -82,7 +82,7 @@ contract Lottery is CommitReveal{
     }
 
     function withdraw() public {
-        // require(block.timestamp - poolStartTime > T3);
+        require(block.timestamp - poolStartTime > T2);
         require(player[playerId[msg.sender]].withdrawn == false);
         require(isPayed = false);
 
